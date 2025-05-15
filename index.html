@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Galeri Spesial</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: inline-block;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #00b894;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #019875;
+    }
+    #pesan {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #ffd700;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Galeri Spesial Buat Kamu</h1>
+    <p>Temukan sesuatu yang mengejutkan di sini.</p>
+    <button id="buka">Lihat Foto</button>
+    <div id="pesan">Naikin volume HP kamu ya!</div>
+  </div>
+
+  <audio id="suara" loop>
+    <source src="suara.mp3" type="audio/mpeg">
+    Browser kamu tidak mendukung audio.
+  </audio>
+
+  <script>
+    const audio = document.getElementById('suara');
+    const tombol = document.getElementById('buka');
+    const pesan = document.getElementById('pesan');
+
+    // Saat tombol diklik
+    function mainkanSuara() {
+      const waktuSebelumnya = localStorage.getItem('posisiAudio');
+      if (waktuSebelumnya) {
+        audio.currentTime = parseFloat(waktuSebelumnya);
+      }
+      audio.play();
+      tombol.disabled = true;
+      tombol.textContent = "Sedang memuat...";
+      pesan.style.display = "block";
+    }
+
+    // Simpan waktu posisi audio setiap 1 detik
+    setInterval(() => {
+      if (!audio.paused) {
+        localStorage.setItem('posisiAudio', audio.currentTime);
+      }
+    }, 1000);
+
+    // Otomatis play jika pernah klik sebelumnya
+    document.addEventListener('DOMContentLoaded', () => {
+      const pernahKlik = localStorage.getItem('pernahKlik');
+      if (pernahKlik) {
+        mainkanSuara();
+        tombol.style.display = "none";
+      } else {
+        tombol.style.display = "inline-block";
+        tombol.addEventListener('click', () => {
+          localStorage.setItem('pernahKlik', 'true');
+          mainkanSuara();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
