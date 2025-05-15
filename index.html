@@ -47,13 +47,13 @@
 </head>
 <body>
   <div class="container">
-    <h1>Galeri Spesial Buat Kamu</h1>
+    <h1>Welcome To Website By Momon</h1>
     <p>Temukan sesuatu yang mengejutkan di sini.</p>
-    <button id="buka">Lihat Foto</button>
-    <div id="pesan">Naikin volume HP kamu ya!</div>
+    <button id="buka">Halaman Selanjut</button>
+    <div id="pesan">Hai Harap Naikan Volume Hp Anda Jika Ada Tulisan "Sedang Memuat.."!</div>
   </div>
 
-  <audio id="suara" loop>
+  <audio id="suara" autoplay loop>
     <source src="suara.mp3" type="audio/mpeg">
     Browser kamu tidak mendukung audio.
   </audio>
@@ -63,38 +63,18 @@
     const tombol = document.getElementById('buka');
     const pesan = document.getElementById('pesan');
 
-    // Saat tombol diklik
     function mainkanSuara() {
-      const waktuSebelumnya = localStorage.getItem('posisiAudio');
-      if (waktuSebelumnya) {
-        audio.currentTime = parseFloat(waktuSebelumnya);
-      }
       audio.play();
       tombol.disabled = true;
       tombol.textContent = "Sedang memuat...";
       pesan.style.display = "block";
     }
 
-    // Simpan waktu posisi audio setiap 1 detik
-    setInterval(() => {
-      if (!audio.paused) {
-        localStorage.setItem('posisiAudio', audio.currentTime);
-      }
-    }, 1000);
-
-    // Otomatis play jika pernah klik sebelumnya
-    document.addEventListener('DOMContentLoaded', () => {
-      const pernahKlik = localStorage.getItem('pernahKlik');
-      if (pernahKlik) {
-        mainkanSuara();
-        tombol.style.display = "none";
-      } else {
+    document.addEventListener('DOMContentLoaded', function () {
+      audio.play().catch(() => {
         tombol.style.display = "inline-block";
-        tombol.addEventListener('click', () => {
-          localStorage.setItem('pernahKlik', 'true');
-          mainkanSuara();
-        });
-      }
+        tombol.addEventListener('click', mainkanSuara);
+      });
     });
   </script>
 </body>
